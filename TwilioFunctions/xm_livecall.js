@@ -3,16 +3,17 @@ exports.handler = function (context, event, callback) {
   console.log('LIVECALL');
   let settings = JSON.parse(decodeURI(event.setting));
   let twiml = new Twilio.twiml.VoiceResponse();
+  var targets = [];
 
   if (parseInt(event.Digits) <= parseInt(settings.NumberofGroups) && parseInt(event.Digits) !== 0) {
     if (event.groupIndex === undefined) {
       // Adds a Recipient element to the Event Object which will be passed to xMatters to target the group.
       // the element in xMatters_Groups is one less than the digit recieved from user input.
-      let index = parseInt(event.Digits) - 1;
+      var index = parseInt(event.Digits) - 1;
       event.recipient = settings.xMatters_Groups[index];
     } else {
-      let targets = JSON.parse(decodeURI(event.targets));
-      let groupIndex = parseInt(event.groupIndex);
+      targets = JSON.parse(decodeURI(event.targets));
+      var groupIndex = parseInt(event.groupIndex);
 
       event.recipient = targets[groupIndex].targetName;
       // Remove the group we are working on now so we can insert membership in its place
@@ -248,7 +249,7 @@ exports.handler = function (context, event, callback) {
               else if ((results.length > 0 && results[0].type === 'PERSON') || (results[0].type === 'DEVICE' && results[0].hasOwnProperty('voice'))) {
                 console.log('Has Primary oncall members');
 
-                let index = parseInt(event.Digits) - 1;
+                index = parseInt(event.Digits) - 1;
                 let recipientGroup = settings.Speak_Groups[index];
                 settings.recipientGroup = settings.Speak_Groups[index];
 
